@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <title>Rapport Mensuel {{ month_name }} {{ year }}</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    {% load static %}
+
+    <div class="cover-page" style="text-align: center; margin-top: 200px; font-family: 'Arial', sans-serif;">
+        <img src="{% static 'templates/logo.png' %}" alt="Logo" style="max-width: 200px; margin-bottom: 40px;">
+        <h1 style="font-weight: 700; color: #03224c;">Rapport Mensuel d'Inscriptions</h1>
+        <h2 style="font-size: 28px; color: #555;">{{ month_name }} {{ year }}</h2>
+    </div>
+
+    <div class="page-break"></div>
+
+    <div class="container" style="font-family: 'Arial', sans-serif; padding: 20px;">
+
+        <div class="mb-4"
+            style="padding: 20px; background-color: #f8f9fa; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <h3 class="mb-3" style="color: #03224c; font-weight: 600;">Nombre Total d'Inscriptions</h3>
+            <p>Cette année on a eu au total {{ total_registrations }} inscriptions</p>
+        </div>
+
+        <div class="mb-4"
+            style="padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <h3 class="mb-3" style="color: #03224c; font-weight: 600;">Comparaison avec le Mois Précédent</h3>
+            <table class="table table-bordered" style="margin-bottom: 20px;">
+                <thead>
+                    <tr style="background-color: #03224c;">
+                        <th>Inscriptions du Mois Courant</th>
+                        <th>Inscriptions du Mois Précédent</th>
+                        <th>Pourcentage du Changement (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="text-align: center; font-size: 18px;">
+                        <td>{{ comparison.current_month_registrations }}</td>
+                        <td>{{ comparison.previous_month_registrations }}</td>
+                        <td>{{ comparison.percentage_change }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mb-4"
+            style="padding: 20px; background-color: #f8f9fa; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <h3 class="mb-3" style="color: #03224c; font-weight: 600;">Top 3 Événements par Inscriptions pour le mois
+                {{month_name }}</h3>
+            <ul style="font-size: 18px; line-height: 1.6;">
+                {% for event in top_events %}
+                <li><strong>{{ event.evenement__nom }}</strong>: {{ event.total_inscriptions }} inscriptions</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="mb-4"
+            style="padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <h3 class="mb-3" style="color: #03224c; font-weight: 600;">Détail des Inscriptions par Événement</h3>
+            <table class="table table-bordered" style="margin-bottom: 20px;">
+                <thead>
+                    <tr style="background-color: #03224c;">
+                        <th>Événement</th>
+                        <th>Total Inscriptions</th>
+                        <th>Total Participants</th>
+                        <th>Taux de Participation (%)</th>
+                        <th>Paiements Complétés</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in event_details %}
+                    <tr style="text-align: center; font-size: 16px;">
+                        <td>{{ event.nom }}</td>
+                        <td>{{ event.total_inscriptions }}</td>
+                        <td>{{ event.total_participants }}</td>
+                        <td>{{ event.taux_participation|floatformat:2 }}</td>
+                        <td>{{ event.total_payments }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mb-4" style="padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <h3 class="mb-3" style="color: #03224c; font-weight: 600;">Top Participants de ce mois</h3>
+            <table class="table table-bordered" style="margin-bottom: 20px;">
+                <thead>
+                    <tr style="background-color: #03224c;">
+                        <th>Nom utilisateur</th>
+                        <th>Total Inscriptions</th>
+                        <th>Total Participations</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in top_users %}
+                    <tr style="text-align: center; font-size: 16px;">
+                        <td>{{ user.Utilisateur__email }}</td>
+                        <td>{{ user.total_events }}</td>
+                        <td>{{ user.total_participations }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>

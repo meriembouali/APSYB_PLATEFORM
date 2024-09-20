@@ -1,0 +1,13 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Create User{% endblock %}
+
+{% block content %}
+
+<h1>Generate Attestation</h1>
+<form method="post" action="{% url 'generate_attestation' inscription_id=inscription.id %}">
+    {% csrf_token %}
+    <button type="submit">Generate Attestation</button>
+</form>
+
+{% endblock %}

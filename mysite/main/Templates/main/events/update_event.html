@@ -1,0 +1,156 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}update event{% endblock %}
+
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'styles/form.css' %}?v={{ timestamp }}">
+
+
+
+<div class="container mt-5">
+    <h1 class="fs-1 fw-bolder">Modifier l'événement:</h1>
+    <form action="{% url 'update_event' event_id %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_nom" class="form-label">Nom de l'événement</label>
+            <input placeholder="nom de l'evenement" type="text" name="nom" id="id_nom" class="form-control"
+                value="{{ form.nom.value|default_if_none:'' }}">
+            {% if form.nom.errors %}
+            <div class="text-danger">{{ form.nom.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="id_description" class="form-label">Description</label>
+            <textarea placeholder="Description de l'evenement" name="description" id="id_description"
+                class="form-control">{{ form.description.value|default_if_none:'' }}</textarea>
+            {% if form.description.errors %}
+            <div class="text-danger">{{ form.description.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_lieu" class="form-label">Lieu</label>
+            <input placeholder="Lieu de l'evenement" type="text" name="lieu" id="id_lieu" class="form-control"
+                value="{{ form.lieu.value|default_if_none:'' }}">
+            {% if form.lieu.errors %}
+            <div class="text-danger">{{ form.lieu.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_details_lieu" class="form-label">Détails Lieu</label>
+            <textarea placeholder="Détails du lieu" name="details_lieu" id="id_details_lieu"
+                class="form-control">{{ form.details_lieu.value|default_if_none:'' }}</textarea>
+            {% if form.details_lieu.errors %}
+            <div class="text-danger">{{ form.details_lieu.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="id_public_vise" class="form-label">Public Visé</label>
+                <input placeholder="public visé de l'evenement" type="text" name="public_vise" id="id_public_vise"
+                    class="form-control" value="{{ form.public_vise.value|default_if_none:'' }}">
+                {% if form.public_vise.errors %}
+                <div class="text-danger">{{ form.public_vise.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="id_nombre_places" class="form-label">Nombre de Places</label>
+                <input placeholder="Nombre de places disponibles" type="number" name="nombre_places"
+                    id="id_nombre_places" class="form-control"
+                    value="{{ form.nombre_places.value|default_if_none:'' }}">
+                {% if form.nombre_places.errors %}
+                <div class="text-danger">{{ form.nombre_places.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="id_objectifs" class="form-label">Objectifs</label>
+            <textarea placeholder="Objectifs de l'evenement" name="objectifs" id="id_objectifs"
+                class="form-control">{{ form.objectifs.value|default_if_none:'' }}</textarea>
+            {% if form.objectifs.errors %}
+            <div class="text-danger">{{ form.objectifs.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_programme" class="form-label">Programme</label>
+            <textarea placeholder="Programme de l'événement" name="programme" id="id_programme"
+                class="form-control">{{ form.programme.value|default_if_none:'' }}</textarea>
+            {% if form.programme.errors %}
+            <div class="text-danger">{{ form.programme.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="id_organisateurs" class="form-label">Organisateurs</label>
+                <input placeholder="Organisateurs de l'evenement" type="text" name="organisateurs" id="id_organisateurs"
+                    class="form-control" value="{{ form.organisateurs.value|default_if_none:'' }}">
+                {% if form.organisateurs.errors %}
+                <div class="text-danger">{{ form.organisateurs.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="d-flex flex-column col-md-4 mb-3">
+                <label for="id_date" class="form-label">Date</label>
+                {{form.date}}
+                {% if form.date.errors %}
+                <div class="text-danger">{{ form.date.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="d-flex flex-column col-md-4 mb-3">
+                <label for="id_heure" class="form-label">Heure</label>
+                {{form.heure}}
+                {% if form.heure.errors %}
+                <div class="text-danger">{{ form.heure.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="id_event_image" class="form-label">Image de l'événement</label>
+            {% if form.instance.event_image %}
+            <div class="my-3">
+                <img src="{{ form.instance.event_image.url }}" alt="event Image" style="max-width: 200px;">
+            </div>
+            {% endif %}
+            <input type="file" name="event_image" id="id_event_image" class="form-control">
+            {% if form.event_image.errors %}
+            <div class="text-danger">{{ form.event_image.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="id_invitation_image" class="form-label">Image de l'invitation</label>
+            {% if form.instance.invitation_image %}
+            <div class="my-3">
+                <img src="{{ form.instance.invitation_image.url }}" alt="Invitation Image" style="max-width: 200px;">
+            </div>
+            {% endif %}
+            <input type="file" name="invitation_image" id="id_invitation_image" class="form-control">
+            {% if form.invitation_image.errors %}
+            <div class="text-danger">{{ form.invitation_image.errors }}</div>
+            {% endif %}
+        </div>
+
+
+        <div class="mb-3">
+            <label for="id_diffusion_directe" class="form-label">Diffusion Directe</label>
+            {{form.diffusion_directe}}
+            {% if form.diffusion_directe.errors %}
+            <div class="text-danger">{{ form.diffusion_directe.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="d-flex justify-content-end">
+            <a href="{% url 'event_details' event_id%}" class="btn btn-primary"
+                style="background-color: #C04A0C;">Annuler</a>
+            <button type="submit" class="btn btn-primary ml-3" style="background-color: #03224c;">Modifier
+                événement</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

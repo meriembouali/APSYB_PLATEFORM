@@ -1,0 +1,93 @@
+{% load static %}
+<footer class="footer text-light py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <div class="footer-logo mb-5">
+                    <img src="{% static 'templates/logo.png' %}" alt="Company Logo" class="img-fluid">
+                </div>
+                <p>Visitez notre plateforme pour ne manquer aucun événement. De nombreuses surprises et une grande dose
+                    d'excitation vous attendent!</p>
+            </div>
+
+            <div class="col-md-3 mb-4" style="margin-left: 15rem;">
+                <h5>Menu</h5>
+                <ul class="list-unstyled">
+                    {% if user.is_superuser %}
+                    <li><a href="{% url 'dashboard_inscription' %}" class="text-light">Acceuil</a></li>
+                    <li><a href="{% url 'events' %}" class="text-light">Evénements</a></li>
+                    <li><a href="{% url 'users' %}" class="text-light">Utilisateurs</a></li>
+                    <li><a href="{% url 'create_event' %}" class="text-light">Créer</a></li>
+                    {% else %}
+                    <li><a href="{% url 'user_page' %}" class="text-light">Acceuil</a></li>
+                    <li><a href="{% url 'events' %}" class="text-light">Evénements</a></li>
+                    <li><a href="{% url 'my_registered_events' %}" class="text-light">Mes événements</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <h5 class="mb-5">Nous contacter</h5>
+                <ul class="list-unstyled">
+                    <li>Tel: (+213) 794121995</li>
+                    <li>Siège de l’association : promotion Edimco Bt D Pte N° 13 Boulvard Krim Belkacem Bejaia 06000
+                    </li>
+                    <li>Vous avez une question? Contacter nous: apsyb06@gmail.com</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <p class="mb-0">&copy; 2024. L'Association Amicale des Psychiatres de Béjaïa.</p>
+        </div>
+    </div>
+</footer>
+
+<style>
+    .footer {
+        background-color: #03224c;
+        color: #f8f9fa;
+    }
+
+    .footer-logo img {
+        max-width: 100px;
+        /* Adjust logo size */
+    }
+
+    .footer p {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .footer h5 {
+        font-size: 18px;
+        margin-bottom: 15px;
+        font-weight: bold;
+    }
+
+    .footer ul {
+        padding-left: 0;
+    }
+
+    .footer ul li {
+        margin-bottom: 10px;
+    }
+
+    .footer ul li a {
+        color: #f8f9fa;
+        text-decoration: none;
+    }
+
+    .footer ul li a:hover {
+        text-decoration: underline;
+    }
+
+    .text-center {
+        margin-top: 20px;
+    }
+
+    .text-center p {
+        margin-bottom: 0;
+        font-size: 14px;
+    }
+</style>

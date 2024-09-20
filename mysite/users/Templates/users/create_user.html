@@ -1,0 +1,90 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Créer utilisateur{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'styles/form.css' %}?v={{ timestamp }}">
+
+<div class="container mt-5">
+    <h1 class="fs-1 fw-bolder">Créer un utilisateur</h1>
+    <form action="{% url 'create_user' %}" method="POST">
+        {% csrf_token %}
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="id_email" class="form-label">Email</label>
+                <input type="email" name="email" id="id_email" class="form-control" placeholder="email"
+                    value="{{ form.email.value|default_if_none:'' }}">
+                {% if form.email.errors %}
+                <div class="text-danger">{{ form.email.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="id_nom" class="form-label">Nom</label>
+                <input type="text" name="nom" id="id_nom" class="form-control" placeholder="nom"
+                    value="{{ form.nom.value|default_if_none:'' }}">
+                {% if form.nom.errors %}
+                <div class="text-danger">{{ form.nom.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="id_prenom" class="form-label">Prénom</label>
+                <input type="text" name="prenom" id="id_prenom" class="form-control" placeholder="prénom"
+                    value="{{ form.prenom.value|default_if_none:'' }}">
+                {% if form.prenom.errors %}
+                <div class="text-danger">{{ form.prenom.errors }}</div>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="id_age" class="form-label">Age</label>
+                <input type="number" name="age" id="id_age" class="form-control" placeholder="age"
+                    value="{{ form.age.value|default_if_none:'' }}">
+                {% if form.age.errors %}
+                <div class="text-danger">{{ form.age.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="id_telephone" class="form-label">Téléphone</label>
+                <input type="text" name="telephone" id="id_telephone" class="form-control"
+                    placeholder="numéro de téléphone" value="{{ form.telephone.value|default_if_none:'' }}">
+                {% if form.telephone.errors %}
+                <div class="text-danger">{{ form.telephone.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="id_password" class="form-label">Mot de passe</label>
+            <input type="password" name="password" id="id_password" class="form-control" placeholder="mot de passe">
+            {% if form.password.errors %}
+            <div class="text-danger">{{ form.password.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_password_confirmation" class="form-label">Confirmer mot de passe</label>
+            <input type="password" name="password_confirmation" id="id_password_confirmation" class="form-control"
+                placeholder="confirmer le mot de passe">
+            {% if form.password_confirmation.errors %}
+            <div class="text-danger">{{ form.password_confirmation.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="d-flex justify-content-end mb-3">
+            <a href="{% url 'users' %}" class="btn btn-primary me-2"
+                style="background-color: #C04A0C; color: #fff;">Annuler</a>
+            <button type="submit" class="btn btn-primary ml-3" style="background-color: #03224c;">Créer
+                utilisateur</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

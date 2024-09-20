@@ -1,0 +1,55 @@
+.conteneur {
+    max-width: 800px;
+    margin: auto;
+    padding: 15px;
+}
+
+.inscription-card {
+    border-radius: 8px;
+    margin-bottom: 3rem;
+}
+
+.inscription-card-header {
+    border-bottom: 1px solid #dee2e6;
+    color: #fff;
+    text-align: center;
+    background-color: #03224c !important;
+    padding: 2rem 1rem;
+
+
+}
+
+.inscription-card-body {
+    padding: 20px;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+
+
+.inscription-card-body p {
+    font-size: 1.1em;
+    margin-bottom: 15px;
+}
+
+.inscription-card-body .strong {
+    color: #03224c;
+}
+
+.qr-code {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.qr-code img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+    .card-body {
+        padding: 15px;
+    }
+}

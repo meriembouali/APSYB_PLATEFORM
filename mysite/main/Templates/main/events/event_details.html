@@ -1,0 +1,234 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}Event Details{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'styles/event_details.css' %}?v={{ timestamp }}">
+
+<style>
+    .event-details h3,
+    .event-details h4 {
+        color: #212529;
+    }
+
+    .container .btn {
+        background-color: #03224c;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background-color 0.3s ease;
+    }
+
+    .container .btn-danger {
+        background-color: #fd2323;
+    }
+
+    @media (max-width: 768px) {
+        .event-banner h1 {
+            font-size: 2rem;
+        }
+
+        .event-banner .event-image-container img {
+            height: 200px;
+        }
+    }
+</style>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="event-banner col-lg-8">
+            {% if event.event_image %}
+            <div class="event-image-container mb-4">
+                <img src="{{ event.event_image.url }}" alt="Event Image" class="img-fluid w-100">
+            </div>
+            {% endif %}
+            <h1 class="mb-3">{{ event.nom }}</h1>
+            <p class="lead text-muted">{{ event.date }} at {{ event.heure }}</p>
+            {% if event.live %}
+            <a class="lead" href="{{event.live}}" target="_blank">Le live de cet événement est disponible maintenant,
+                cliquer pour regarder</a>
+            {%endif%}
+        </div>
+
+        <div class="col-lg-4 d-flex flex-column justify-content-center align-items-center">
+            {% if not is_admin %}
+            <div class="sticky-container">
+                <div class="fixed-reservation">
+                    <button id="register-btn" data-event-id="{{ event.id }}"
+                        class="btn btn-primary btn-lg register-btn">Réserver une place</button>
+                </div>
+            </div>
+            {% endif %}
+            {% if is_admin %}
+            <div class="admin-options mt-3">
+                <div>
+                    <a href="{% url 'liste_des_inscrits' event.id %}" class="btn btn-secondary mb-2"> liste des
+                        inscrits à cet événement </a>
+                    <button class="btn btn-secondary mb-2" style="background-color: #C04A0C;" type="button"
+                        id="add-live-link-btn">Ajouter lien live</button>
+
+                    <form id="live-stream-form" method="POST" action="{% url 'add_live_stream_link' id=event.id %}">
+                        {% csrf_token %}
+
+                        <div id="live-link-input" style="display: none;" class="my-3">
+                            <input class="p-2" type="url" name="live" placeholder="Entrez le lien du live"
+                                value="{{event.live|default_if_none:''}}">
+                            <button type="submit" class="py-2 px-3"
+                                style="background-color: #03224c; color: #fff; border: none; outline: none; border-radius: 4px;">Enregistrer</button>
+                        </div>
+                    </form>
+
+
+                </div>
+                <div class="">
+                    <a href="{% url 'update_event' event.id %}" class="btn btn-secondary mb-2">Modifier cet
+                        événement</a>
+                    <a href="{% url 'delete_event' event.id %}" class="btn btn-danger">Supprimer cet événement</a>
+
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row my-4">
+        <div class="col-lg-8">
+            <div class="event-details">
+                <h3>Détails de l'événement</h3>
+                <p class="text-muted mb-5" style="line-height: 1.8rem;">{{ event.description }}</p>
+
+                <h4>Location</h4>
+                <p class="text-muted">{{ event.lieu }}</p>
+                <p class="text-muted mb-5">{{ event.details_lieu }}</p>
+
+                <h4>Public visé</h4>
+                <p class="text-muted mb-3">{{ event.public_vise }}</p>
+
+                <h4>Nombre de Places</h4>
+                <p class="text-muted mb-5">{{ event.nombre_places }} disponibles</p>
+
+                <h4>Organisateurs</h4>
+                <p class="text-muted mb-3">{{ event.organisateurs }}</p>
+
+                <h4>Objectifs</h4>
+                <p class="text-muted mb-5">{{ event.objectifs }}</p>
+
+                {%if event.programme%}
+                <h4>Programme</h4>
+                <p class="text-muted mb-5">
+                    {{ event.programme|linebreaksbr }}</p>
+                {% endif %}
+
+                <h4 class="mt-5">Date et heure</h4>
+                <p class="text-muted">{{ event.date }} a {{ event.heure }}</p>
+
+                <h4>Diffusion en direct?</h4>
+                <p class="text-muted">{{ event.diffusion_directe|yesno:"Oui,Non" }}</p>
+            </div>
+        </div>
+
+        {% if is_admin and event.invitation_image %}
+        <div class="col-lg-4">
+            <h4 style="font-weight: 600;">L'invitation</h4>
+            <div class="invitation-image-container mb-4">
+                <img src="{{ event.invitation_image.url }}" alt="Invitation Image" class="img-fluid">
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    document.getElementById("add-live-link-btn").addEventListener("click", function () {
+        var liveLinkInput = document.getElementById("live-link-input");
+
+        if (liveLinkInput.style.display === "none" || liveLinkInput.style.display === "") {
+            liveLinkInput.style.display = "block";
+        } else {
+            liveLinkInput.style.display = "none";
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const registerBtn = document.getElementById('register-btn');
+
+        registerBtn.addEventListener('click', function () {
+            const eventId = registerBtn.getAttribute('data-event-id');
+
+            Swal.fire({
+                title: 'Vous êtes sûr?',
+                text: "Voulez vous bien vous inscrire à cet événement?",
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#03224c',
+                cancelButtonColor: '#C04A0C',
+                confirmButtonText: "Oui, je m'inscris!",
+                cancelButtonText: "Annuler",
+                iconColor: '#03224c',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`{% url 'register_event' event.id %}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        body: JSON.stringify({ event_id: eventId })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                Swal.fire({
+                                    title: 'Succès!',
+                                    text: data.message,
+                                    icon: 'success',
+                                    confirmButtonText: 'Ok',
+                                    confirmButtonColor: '#03224c',
+                                }).then(() => {
+                                    window.location.href = "{% url 'my_registered_events' %}";
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Erreur!',
+                                    text: data.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'Ok',
+                                    confirmButtonColor: '#03224c',
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong!',
+                                icon: 'error',
+                                confirmButtonText: 'Ok'
+                            });
+                        });
+                }
+            });
+        });
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    });
+</script>
+
+{% endblock %}

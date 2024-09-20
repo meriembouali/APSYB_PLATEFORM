@@ -1,0 +1,126 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Update User profile{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'styles/form.css' %}?v={{ timestamp }}">
+
+
+<div class="container mt-5">
+    <h1 class="">Modifier mon profile</h1>
+    <form action="{% url 'update_user_profile'%}" method="POST">
+        {% csrf_token %}
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="id_email" class="form-label">Email</label>
+                <input type="email" name="email" id="id_email" class="form-control"
+                    value="{{ form.email.value|default_if_none:'' }}">
+                {% if form.email.errors %}
+                <div class="text-danger">{{ form.email.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="id_nom" class="form-label">Nom</label>
+                <input type="text" name="nom" id="id_nom" class="form-control"
+                    value="{{ form.nom.value|default_if_none:'' }}">
+                {% if form.nom.errors %}
+                <div class="text-danger">{{ form.nom.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="id_prenom" class="form-label">Prénom</label>
+                <input type="text" name="prenom" id="id_prenom" class="form-control"
+                    value="{{ form.prenom.value|default_if_none:'' }}">
+                {% if form.prenom.errors %}
+                <div class="text-danger">{{ form.prenom.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="id_age" class="form-label">Age</label>
+                <input type="number" name="age" id="id_age" class="form-control"
+                    value="{{ form.age.value|default_if_none:'' }}">
+                {% if form.age.errors %}
+                <div class="text-danger">{{ form.age.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="id_telephone" class="form-label">Téléphone</label>
+                <input type="text" name="telephone" id="id_telephone" class="form-control"
+                    value="{{ form.telephone.value|default_if_none:'' }}">
+                {% if form.telephone.errors %}
+                <div class="text-danger">{{ form.telephone.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="input-group mb-3">
+            <input type="password" name="password-confirmation" placeholder="Confirmer le mot de passe..."
+                class="form-control" value="{{ form.password_confirmation.value|default_if_none:''  }}">
+            {{ form.password_confirmation.errors }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_password_confirmation" class="form-label">Confirmer mot de passe</label>
+            <input placeholder="réecrire votre mot de passe pour pouvoir modifier" type="password"
+                name="password_confirmation" id="id_password_confirmation" class="form-control" value="">
+            {% if form.password_confirmation.errors %}
+            <div class="text-danger">{{ form.password_confirmation.errors }}</div>
+            {% endif %}
+        </div>
+
+
+        <div class="d-flex justify-content-end mb-3">
+            <a href="{% url 'user_profile' %}" class="btn btn-primary me-2"
+                style="background-color: #C04A0C; color: #fff;">Annuler</a>
+            <button type="submit" class="btn btn-primary ml-3" style="background-color: #03224c;">Modifier</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Select the toggle password element and the password input
+        var togglePassword = document.getElementById('togglePassword');
+        var passwordInput = document.getElementById('id_password');
+        var eyeIcon = togglePassword.querySelector('i');
+
+        // Check if elements are correctly selected
+        console.log('togglePassword:', togglePassword);
+        console.log('passwordInput:', passwordInput);
+        console.log('eyeIcon:', eyeIcon);
+
+        // Add click event listener to the toggle password element
+        if (togglePassword) {
+            togglePassword.addEventListener('click', function () {
+                // Toggle the password input type between 'text' and 'password'
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    // Change the icon to eye-slash
+                    eyeIcon.classList.remove('fa-eye');
+                    eyeIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    // Change the icon to eye
+                    eyeIcon.classList.remove('fa-eye-slash');
+                    eyeIcon.classList.add('fa-eye');
+                }
+            });
+        } else {
+            console.error('togglePassword element not found.');
+        }
+    });
+
+
+
+</script>

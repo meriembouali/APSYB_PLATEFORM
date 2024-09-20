@@ -1,0 +1,161 @@
+{% extends 'main/base.html' %}
+
+{% block title %}User Details{% endblock %}
+
+{% block content %}
+
+<style>
+    .user-page {
+        background-color: #03224c;
+        transition: background-color 0.3s ease;
+        border: none;
+        outline: none;
+    }
+
+    .user-page:hover {
+        background-color: #C04A0C;
+        border: none;
+        outline: none;
+    }
+
+    .user-input {
+        border: none;
+        border-bottom: 2px solid #ddd;
+        border-radius: 0;
+        padding: 10px;
+        outline: none;
+        transition: border-color 0.3s ease;
+        font-size: 1rem;
+        width: 200px;
+    }
+
+    .user-input:focus {
+        border-bottom: 2px solid #03224c;
+        outline: none !important;
+
+    }
+
+    @media (max-width: 768px) {
+        .d-flex {
+            flex-wrap: wrap;
+        }
+
+        .icons {
+            flex-wrap: nowrap;
+        }
+
+        .d-flex.justify-content-between {
+            justify-content: space-around;
+        }
+
+        .user-input {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .table thead {
+            font-size: 0.9rem;
+        }
+
+        .table td {
+            font-size: 0.85rem;
+        }
+
+        .d-flex.justify-content-center {
+            gap: 1rem;
+        }
+
+        .table-responsive {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .table {
+            font-size: 0.8rem;
+        }
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fs-1" style="color: #03224c; font-weight: 600;">Liste des utilisateurs</h3>
+        <a href="{% url 'create_user' %}">
+            <button class="btn btn-primary user-page">
+                Créer utilisateur
+                <i class="fa-solid fa-plus" style="color: #fff;"></i>
+            </button>
+        </a>
+    </div>
+
+    <form action="" method="GET" class="py-4 pr-4">
+        <div class="d-flex align-items-center justify-content-between">
+            <div>
+                <input type="text" name="email" class="user-input" id="email" placeholder="Email"
+                    value="{{ my_Filter.form.email.value | default_if_none:''}}">
+            </div>
+            <div>
+                <input type="text" name="nom" class="user-input" id="nom" placeholder="Nom"
+                    value="{{ my_Filter.form.nom.value | default_if_none:''}}">
+            </div>
+            <div>
+                <input type="text" name="prenom" class="user-input" id="prenom" placeholder="Prénom"
+                    value="{{ my_Filter.form.prenom.value | default_if_none:'' }}">
+            </div>
+            <div>
+                <input type="number" name="age" class="user-input" id="age" placeholder="Age"
+                    value="{{ my_Filter.form.age.value | default_if_none:'' }}">
+            </div>
+            <div class="d-flex justify-content-end mt-4">
+                <button type="submit" style="outline: none; border: none; background-color: transparent;">
+                    <i class="fa-solid fa-magnifying-glass" style="font-size: 1.7em;"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+
+
+
+
+
+    <div class="table-responsive my-3">
+        <table class="table table-bordered table-hover">
+            <thead style="background-color: #03224c; color: #fff;">
+                <tr>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Prénom</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Téléphone</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.nom }}</td>
+                    <td>{{ user.prenom }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.age }}</td>
+                    <td>{{ user.telephone }}</td>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center gap-5 icons">
+                            <!-- update -->
+                            <a href="{% url 'update_user' user.id %}" style="margin-right: 1rem;">
+                                <i class="fa-solid fa-pen-to-square edit"
+                                    style="font-size: 1.5rem; color: #03224c;"></i>
+                            </a>
+                            <!-- delete -->
+                            <a href="{% url 'delete_user' user.id%}">
+                                <i class="fa-solid fa-trash-can" style="font-size: 1.5rem; color: #fd2323;"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

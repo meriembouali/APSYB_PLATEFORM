@@ -1,0 +1,132 @@
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+
+.left-side {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.left-side .logo {
+    margin-bottom: 3rem;
+}
+
+
+.left-side h3 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    color: #03224c;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid #03224c;
+    animation:
+        typing 1.5s steps(40, end) 1s 1 normal both,
+        blink 0.75s step-end infinite;
+}
+
+
+.left-side form {
+    width: 100%;
+}
+
+.left-side .input-group {
+    margin-bottom: 1rem;
+}
+
+.left-side .input-group input {
+    border-radius: 0.25rem;
+    padding: 0.75rem;
+}
+
+.left-side .input-group-append {
+    background-color: #1c4966;
+    border-radius: 0.25rem;
+}
+
+.left-side .btn {
+    background-color: #D1410C;
+    border: none;
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.left-side .btn:hover {
+    background-color: #D1410C;
+}
+
+.left-side #messages {
+    color: #D1410C;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.left-side .links {
+    text-align: center;
+    margin-top: 1rem;
+    color: #03224c;
+}
+
+.left-side .links a {
+    color: #D1410C;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+.right-side {
+    position: relative;
+    flex: 1;
+    background: url('/static/templates/login-img.jpg') no-repeat center center;
+    background-size: cover;
+}
+
+.right-side::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+
+@keyframes typing {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes blink {
+    50% {
+        border-color: transparent;
+    }
+}

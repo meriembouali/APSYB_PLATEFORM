@@ -1,0 +1,91 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'styles/my_registered_events.css' %}?v={{ timestamp }}">
+
+<style>
+    @media (max-width: 768px) {
+        .section1 h1 {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+
+<div class="section1">
+    <h1>Vous êtes inscrits à : </h1>
+    <div class="row">
+        {% for item in events_with_status %}
+        <div class="col-md-4 mb-4">
+            <a href="{% url 'event_details' item.event.id %}" class="event-card-link h-100">
+                <div class="event-card d-flex flex-column">
+                    {% if item.event.event_image %}
+                    <img src="{{ item.event.event_image.url }}" class="event-card-img-top h-100" alt="Event Image">
+                    {% endif %}
+
+                    <div class="event-card-header">
+                        <h3 class="event-card-title">{{ item.event.nom }}</h3>
+                    </div>
+
+
+                    <div class="d-flex justify-content-between event-card-confirm">
+
+                        <div class="">
+                            {% if item.inscription.confirmed %}
+                            <p style="color: #009700;">
+                                <i class="fas fa-check-circle"></i> Confirmé
+                            </p>
+                            {% else %}
+                            <p style="color: #FBC02D;">
+                                <i class="fas fa-hourglass-half"></i> Non Confirmé
+                            </p>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            {% if item.inscription.confirmed %}
+                            {% if item.inscription.statut_paiement == "paye" %}
+                            <p style="color: #009700;">
+                                <i class="fas fa-credit-card"></i>Payé
+                            </p>
+                            {% else %}
+                            <p style="color: rgb(217, 71, 71);">
+                                <i class="fas fa-credit-card"></i> Pas encore payé
+                            </p>
+                            {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="event-card-body flex-grow-1">
+                        <p>{{ item.event.lieu }}, le {{ item.event.date }} a {{ item.event.heure }}</p>
+                    </div>
+
+                    <div class="event-card-footer">
+                        {% if not item.inscription.confirmed%}
+                        <form method="get" action="{% url 'unregister_event' item.event.id %}">
+                            <button type="submit">Annuler</button>
+                        </form>
+                        <form method="get" action="{% url 'confirmer_inscription' item.event.id %}">
+                            <button type="submit">Confirmer inscription</button>
+                        </form>
+                        {%endif%}
+                        {% if item.inscription.statut_paiement == "non_paye" and item.inscription.confirmed%}
+                        <form method="get" action="">
+                            <button type="submit">Payer</button>
+                        </form>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </a>
+        </div>
+        {%empty%}
+        <p class="ml-3">Vous êtes inscrits à aucun événement pour l'instant</p>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}

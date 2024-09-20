@@ -1,0 +1,215 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+
+<style>
+    .container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    .row {
+        margin-bottom: 20px;
+    }
+
+    .h1 {
+        font-size: 2.5rem;
+        color: #03224c;
+        font-weight: bold;
+    }
+
+    .text-md-end {
+        text-align: end;
+    }
+
+    .btn-primary {
+        background-color: #D1410C;
+        border-color: #D1410C;
+    }
+
+    .btn-primary:hover {
+        background-color: #b5300a;
+        border-color: #b5300a;
+    }
+
+    .card {
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    .card-body .edit {
+        color: #03224c;
+        font-size: 2rem;
+    }
+
+
+
+    .card-body .edit:hover {
+        color: #D1410C;
+
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        color: #03224c;
+        font-weight: bold;
+    }
+
+    hr {
+        border: 0;
+        border-top: 1px solid #e0e0e0;
+        margin: 20px 0;
+    }
+
+    .profile-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 20px;
+        border: none !important;
+    }
+
+    .card p {
+        font-size: 1rem;
+        color: #333;
+        margin: 10px 0;
+    }
+
+    .card p strong {
+        color: #03224c;
+    }
+
+    .event-card-footer {
+        display: flex;
+        padding: 0 1.5rem;
+        margin-bottom: 2rem;
+        margin-top: -1rem;
+
+    }
+
+    .event-card-footer a {
+        font-size: 0.9rem;
+        outline: none;
+        border: none;
+        padding: 0.5rem 1rem;
+        transition: background-color 0.3s ease;
+
+
+    }
+
+    .event-card-footer a:hover {
+        background-color: #D1410C;
+
+    }
+
+    .profile-icon {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: #DCDCDC;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #FFF;
+    }
+
+    .profile-icon .fa-user {
+        font-size: 4rem;
+    }
+</style>
+
+<link rel="stylesheet" href="{% static 'styles/user_page.css' %}?v={{ timestamp }}">
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8">
+            <h1 class="h1 fs-1">Mon profile</h1>
+        </div>
+        <div class="col-md-4 text-md-end text-start mt-3 mt-md-0">
+
+        </div>
+    </div>
+
+    <!-- User Details -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between">
+                <h5 class="card-title">Information personnelles</h5>
+                <a href="{% url 'update_user_profile' %}">
+                    <i class="fa-solid fa-pen-to-square edit"></i>
+                </a>
+            </div>
+            <hr>
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <p><strong>Nom:</strong> {{ user.nom }}</p>
+                    <p><strong>Prénom:</strong> {{ user.prenom }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Age:</strong> {{ user.age }}</p>
+                    <p><strong>Téléphone:</strong> {{ user.telephone }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        {% if events_with_attestations %}
+        <div class="card-body">
+            <h5 class="card-title">Evénements auxquels vous avez participé: </h5>
+            <hr>
+            <div class="row">
+                {% for entry in events_with_attestations %}
+                <div class="col-md-4 mb-4">
+                    <div class="event-card d-flex flex-column">
+                        {% if entry.event.event_image %}
+                        <img src="{{ entry.event.event_image.url }}" class="event-card-img-top h-100" alt="Event Image">
+                        {% endif %}
+
+                        <div class="event-card-header">
+                            {% if entry.attestation %}
+                            {% if entry.attestation.etat == 'genere' and entry.attestation.image %}
+                            <p class="text-success">Votre attestation est prête.</p>
+                            {% else %}
+                            <p style="color: #FBC02D;">Votre attestation n'est pas encore prête.</p>
+                            {% endif %}
+                            {% endif %}
+                            <h3 class="event-card-title">{{ entry.event.nom }}</h3>
+                        </div>
+
+                        <div class="event-card-body flex-grow-1">
+                            <p>{{ entry.event.lieu }}, le {{ entry.event.date }} a {{ entry.event.heure}}
+                            </p>
+                        </div>
+                        <div class="event-card-footer">
+                            {% if entry.attestation %}
+                            {% if entry.attestation.etat == 'genere' and entry.attestation.image %}
+                            <a href="{{ entry.attestation.image.url }}" class="btn btn-success"
+                                download="{{ entry.attestation.Utilisateur.nom }}.jpg">
+                                Télécharger l'attestation
+                            </a>
+                            {% endif %}
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock %}

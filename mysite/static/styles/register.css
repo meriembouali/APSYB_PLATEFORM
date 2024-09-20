@@ -1,0 +1,122 @@
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.left-side {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+
+.left-side .logo {
+    margin-bottom: 3rem;
+}
+
+
+.left-side .text {
+    margin-bottom: 2rem;
+    color: #03224c;
+}
+
+.left-side .text h3 {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid #03224c;
+    animation:
+        typing 1.5s steps(40, end) 1s 1 normal both,
+        blink 0.75s step-end infinite;
+}
+
+.left-side .text p {
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    margin-left: 0.2rem;
+
+}
+
+.left-side form {
+    width: 100%;
+}
+
+.left-side input {
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    width: 100%;
+    border: 1.5px solid #dedede;
+}
+
+.left-side .btn {
+    background-color: #D1410C;
+    border: none;
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+
+.left-side #messages {
+    color: #03224c;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.left-side .links {
+    text-align: center;
+    margin-top: 1rem;
+    color: #03224c;
+}
+
+.left-side .links a {
+    color: #D1410C;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+.right-side {
+    position: relative;
+    flex: 1;
+    background: url('/static/templates/register-img.jpg') no-repeat center center;
+    background-size: cover;
+}
+
+.right-side::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+@keyframes typing {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes blink {
+    50% {
+        border-color: transparent;
+    }
+}

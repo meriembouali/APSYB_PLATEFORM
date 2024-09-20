@@ -1,0 +1,61 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<style>
+    .nav-item.active .nav-link {
+        font-weight: bold;
+        color: #C04A0C !important;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg my-3"
+    style="background-color: #fff; padding: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+    <div class="container">
+        <a href="#" class="navbar-brand" style="font-weight: 600; font-size: 1.5em; color: #03224c;">Tableau de bord</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="navbar-toggler-icon"
+                style="background-color: transparent; width: 30px; height: 24px; position: relative;">
+                <span
+                    style="display: block; width: 30px; height: 3px; background-color: #03224c; position: absolute; top: 0; left: 0;"></span>
+                <span
+                    style="display: block; width: 30px; height: 3px; background-color: #03224c; position: absolute; top: 10px; left: 0;"></span>
+                <span
+                    style="display: block; width: 30px; height: 3px; background-color: #03224c; position: absolute; bottom: 0; left: 0;"></span>
+            </div>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li
+                    class="nav-item {% if request.resolver_match.url_name == 'dashboard_inscription' %}active{% endif %}">
+                    <a href="{% url 'dashboard_inscription' %}" class="nav-link text-white">Statistiques
+                        d'inscriptions</a>
+                </li>
+                <li
+                    class="nav-item {% if request.resolver_match.url_name == 'dashboard_participation' %}active{% endif %}">
+                    <a href="{% url 'dashboard_participation' %}" class="nav-link text-white">Statistiques de
+                        participations</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Rapports
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'generer_rapport_mensuel' %}">d'Inscriptions mensuel</a>
+                        <a class="dropdown-item" href="{% url 'generer_rapport_annuel' %}">d'Inscriptions annuel</a>
+                        <div class="dropdown-divider"></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+{% block dashboard_content %}
+{% endblock %}
+
+{% endblock %}

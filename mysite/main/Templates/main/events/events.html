@@ -1,0 +1,114 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Events{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'styles/events.css' %}?v={{ timestamp }}">
+
+<div class="image-container section1">
+    <img src="{% static 'templates/events.jpg'%}" alt="Event Image">
+    <div class="image-overlay">
+        {%if is_admin%}
+        <h1>Planifiez, suivez et administrez<br> <span>vos événements</span> <br></h1>
+        <p>Gérez et organisez vos événements en toute simplicité. Créez des événements, <br> suivez les inscriptions, et
+            assurez leur bon déroulement. Tout est à portée <br> de main pour faciliter votre gestion.</p>
+        <a href="{% url 'create_event' %}" class="btn btn-primary w-auto">
+            Créer un événement
+        </a>
+        {%else%}
+        <h1>Explorez et trouvez vos <br><span>événements préférés</span> <br></h1>
+        <p>Explorez et inscrivez-vous à vos événements préférés. Découvrez <br> de nouvelles opportunités, apprenez, et
+            connectez-vous <br> avec une communauté passionnée.</p>
+        {%endif%}
+
+    </div>
+</div>
+
+
+
+<div class="section2">
+    {% if is_admin %}
+    <h1>Evénements à venir:</h1>
+    {% else %}
+    <h1>Découvrez nos événements: </h1>
+    {% endif%}
+    <div class="row">
+        {% for event_item in event_data %}
+        <div class="col-md-3 mb-4">
+            <a href="{% url 'event_details' event_item.event.id %}" class="event-card-link h-100">
+                <div class="event-card d-flex flex-column pb-3">
+                    {% if event_item.event.event_image %}
+                    <img src="{{ event_item.event.event_image.url }}" class="event-card-img-top h-100"
+                        alt="Event Image">
+                    {% endif %}
+
+                    <div class="event-card-header">
+                        <h3 class="event-card-title">{{ event_item.event.nom }}</h3>
+                        {% if event_item.event.live %}
+                        <p class="ml-3" style="color: #fd2323;">live disponible</p>
+                        {%endif%}
+                    </div>
+                    <div class="event-card-body flex-grow-1">
+                        <p>{{ event_item.event.lieu }}, le {{ event_item.event.date }} a {{ event_item.event.heure }}
+                        </p>
+                        {% if is_admin %}
+                        <p> <strong> Nombre d'inscriptions: </strong>{{ event_item.num_inscriptions }}
+                        </p>
+                        {% endif %}
+                        {% if event_item.remaining_places > 0 %}
+                        <p><strong>Places restantes: </strong>{{ event_item.remaining_places }}</p>
+                        {% else %}
+                        <p class="text-danger"><strong>Plein</strong></p>
+                        {% endif %}
+                        {% if event_item.event.live %}
+                        <button class="btn btn-primary" style="background-color: #03224c;"
+                            onclick="window.open('{{event_item.event.live}}', '_blank')">
+                            regarder live
+                        </button>
+                        {%endif%}
+                    </div>
+                </div>
+            </a>
+        </div>
+        {%empty%}
+        <p class="ml-3">Aucun événement trouvé</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% if is_admin %}
+<div class="section2 section3">
+    <h1>Evénements passés:</h1>
+    <div class="row">
+        {% for event_item in event_past_data %}
+        <div class="col-md-3 mb-4">
+            <a href="{% url 'event_details' event_item.event_past.id %}" class="event-card-link h-100">
+                <div class="event-card d-flex flex-column">
+                    {% if event_item.event_past.event_image %}
+                    <img src="{{ event_item.event_past.event_image.url }}" class="event-card-img-top h-100"
+                        alt="Event Image">
+                    {% endif %}
+
+                    <div class="event-card-header">
+                        <h3 class="event-card-title">{{ event_item.event_past.nom }}</h3>
+                    </div>
+                    <div class="event-card-body flex-grow-1">
+                        <p>{{ event_item.event_past.lieu }}, le {{ event_item.event_past.date }} a
+                            {{event_item.event_past.heure }}
+                        </p>
+                        <p>Nombre d'inscriptions: <strong>{{ event_item.number_inscriptions }}</strong></p>
+                        <p>Nombre de participations: <strong>{{ event_item.number_participations }}</strong></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {%empty%}
+        <p class="ml-3">Aucun événement trouvé</p>
+        {% endfor %}
+    </div>
+</div>
+{% endif%}
+
+
+{% endblock %}

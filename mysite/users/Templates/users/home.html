@@ -1,0 +1,25 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+Home - My Site
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 text-center">
+            <div class="card shadow-lg p-4 mb-4">
+                <div class="card-body">
+                    <h1 class="display-4 fw-bold mb-3">Welcome, {{ user }}</h1>
+                    <p class="lead mb-4">We're glad to have you here. Explore our features and enjoy your stay!</p>
+                    <a href="{% url 'events' %}" class="btn btn-primary btn-lg">View Events</a>
+                </div>
+            </div>
+            <div class="alert alert-info mt-4">
+                <h4 class="alert-heading">What's New?</h4>
+                <p>Check out our latest updates and upcoming events. Stay tuned for more exciting features!</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

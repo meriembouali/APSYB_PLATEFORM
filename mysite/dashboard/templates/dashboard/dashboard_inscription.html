@@ -1,0 +1,288 @@
+{% extends 'dashboard/navdashboard.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block dashboard_content %}
+
+<style>
+    @media (max-width: 768px) {
+        h2 {
+            font-size: 1.5rem;
+        }
+
+        .card-header h5 {
+            font-size: 1.1rem;
+        }
+
+        .container {
+            margin-top: 2rem;
+        }
+    }
+
+    @media (max-width: 1200px) {
+        h2 {
+            font-size: 1.75rem;
+        }
+
+        .card-header h5 {
+            font-size: 1.25rem;
+        }
+
+        .container {
+            margin-top: 3rem;
+        }
+    }
+
+    @media (max-width: 992px) {
+
+        .col-lg-6,
+        .col-lg-12 {
+            width: 100%;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .table-responsive {
+            overflow-x: scroll;
+        }
+
+        .card-header h5 {
+            font-size: 1.15rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+
+        h2 {
+            font-size: 1.25rem;
+        }
+
+        .card-header h5 {
+            font-size: 1rem;
+        }
+
+        .table {
+            font-size: 0.85rem;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: auto !important;
+        }
+    }
+</style>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4" style="color: #03224c; font-weight: 600;">Nombre Total d'Inscriptions (Mensuel/Annuel)
+    </h2>
+
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header" style="background-color: #03224c; color: white;">
+                    <h5 class="mb-0">Inscriptions Mensuelles de l'année {{current_year}}</h5>
+                </div>
+                <div class="card-body p-2">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped table-bordered mb-0">
+                            <thead style="background-color: #03224c; color: white;">
+                                <tr>
+                                    <th>Mois</th>
+                                    <th>Total des Inscriptions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for entry in monthly_inscriptions %}
+                                <tr>
+                                    <td>{{ entry.month|date:"F Y" }}</td>
+                                    <td>{{ entry.total }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="2" class="text-center">Aucune inscription trouvée pour cette année.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header" style="background-color: #03224c; color: white;">
+                    <h5 class="mb-0">Total des Inscriptions par Année</h5>
+                </div>
+                <div class="card-body p-2">
+                    <canvas id="yearlyInscriptionChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="text-center mb-4 mt-5" style="color: #03224c; font-weight: 600;">Aperçu des Inscriptions Mensuelles</h2>
+
+    <div class="row">
+        <div class="col-lg-12 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header" style="background-color: #03224c; color: white;">
+                    <h5 class="mb-0">Comparaison des Inscriptions</h5>
+                </div>
+                <div class="card-body p-2">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped table-bordered mb-0">
+                            <thead style="background-color: #03224c; color: white;">
+                                <tr>
+                                    <th>Mois</th>
+                                    <th>Année Précédente</th>
+                                    <th>Année en Cours</th>
+                                    <th>Changement en Pourcentage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in comparison_data %}
+                                <tr>
+                                    <td>{{ i.month }}</td>
+                                    <td>{{ i.previous_total }}</td>
+                                    <td>{{ i.current_total }}</td>
+                                    <td>
+                                        {% if i.pourcentage_diff is not None %}
+                                        {{ i.pourcentage_diff|floatformat:2 }}%
+                                        {% else %}
+                                        N/A
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">Aucune donnée disponible.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Taux d’Inscriptions par Mois -->
+    <div class="row mb-5">
+        <div class="col-lg-12">
+            <div class="card shadow-sm">
+                <div class="card-header" style="background-color: #03224c; color: white;">
+                    <h5 class="mb-0">Graphique des Inscriptions</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="inscriptionChart" width="800" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ctx = document.getElementById('yearlyInscriptionChart').getContext('2d');
+
+        var labels = JSON.parse('{{ chart_labels|escapejs }}');
+        var data = JSON.parse('{{ chart_data|escapejs }}');
+
+        var yearlyInscriptionChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Inscriptions',
+                    data: data,
+                    backgroundColor: 'rgba(3, 34, 76, 0.2)',
+                    borderColor: '#03224c',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+
+    function randomColor() {
+        const r = Math.floor(Math.random() * 256);
+        const g = Math.floor(Math.random() * 256);
+        const b = Math.floor(Math.random() * 256);
+        return `rgba(${r}, ${g}, ${b}, 1)`;
+    }
+
+    function transformData(data) {
+        const labels = [];
+        const datasets = [];
+
+        for (const [year, months] of Object.entries(data)) {
+            if (labels.length === 0) {
+                labels.push('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre');
+            }
+
+            const color = randomColor();
+
+            datasets.push({
+                label: year,
+                data: months,
+                borderColor: color,
+                backgroundColor: 'transparent',
+                fill: false,
+                tension: 0.1
+            });
+        }
+
+        return { labels, datasets };
+    }
+
+    const data = JSON.parse('{{ data_par_annee|escapejs }}');
+    const chartData = transformData(data);
+
+    const ctx = document.getElementById('inscriptionChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: chartData,
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Mois'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Nombre d\'inscriptions'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'rgba(0,0,0,0.8)'
+                    }
+                }
+            }
+        }
+    });
+
+
+</script>
+</div>
+{% endblock %}

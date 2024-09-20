@@ -1,0 +1,42 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Détails inscription{% endblock %}
+
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'styles/inscription_detail.css' %}?v={{ timestamp }}">
+
+
+<style>
+
+</style>
+
+<div class="conteneur mt-5">
+    <div class="inscription-card shadow-sm">
+        <div class="inscription-card-header bg-primary text-white">
+            <h1 class="mb-0">Détails d'inscription</h1>
+        </div>
+        <div class="inscription-card-body">
+            <p><strong class="strong">Inscrit:</strong> {{ inscription.Utilisateur.email }}</p>
+            <p><strong class="strong">Evénement:</strong> {{ inscription.evenement.nom }}</p>
+            {% if inscription.statut_paiement == 'non_paye' %}
+            <p><strong class="strong">Statut de paiement:</strong>Non payé</p>
+            {% else %}
+            <p><strong class="strong">Statut de paiement:</strong>payé</p>
+            {% endif %}
+            <p><strong>Vérifiez votre e-mail : nous vous avons envoyé un e-mail contenant votre code QR, votre
+                    invitation et
+                    votre badge.</strong></p>
+            {% if inscription.qr_code %}
+            <div class="qr-code">
+                <img src="{{ inscription.qr_code.url }}" alt="QR Code" class="img-fluid">
+            </div>
+            {% else %}
+            <p>Aucun QR code disponible.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

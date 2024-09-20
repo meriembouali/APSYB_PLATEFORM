@@ -1,0 +1,78 @@
+.event-banner .event-image-container img {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    object-fit: cover;
+    height: 400px;
+}
+
+.event-banner h1 {
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+
+.event-details h3,
+.event-details h4 {
+    font-weight: 600;
+}
+
+.event-details p {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.event-details .text-muted {
+    color: #6c757d;
+}
+
+.admin-options .btn {
+    width: 100%;
+}
+
+.invitation-image-container img {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sticky-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 999;
+    width: 300px;
+    height: 150px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.fixed-reservation .register-btn {
+    background-color: #03224c;
+    color: white;
+    font-size: 18px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+}
+
+.fixed-reservation .register-btn:hover {
+    background-color: #C04A0C;
+}
+
+@media (max-width: 768px) {
+
+    .sticky-container {
+        bottom: 10px;
+        right: 10px;
+        padding: 15px;
+    }
+
+    .fixed-reservation .register-btn {
+        font-size: 16px;
+        padding: 10px 15px;
+    }
+}
